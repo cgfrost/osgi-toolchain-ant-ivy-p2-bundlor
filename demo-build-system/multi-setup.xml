@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="multi-setup" >
+
+	<import file="${basedir}/../demo-build-system/common-setup.xml"/>
+
+	<target name="clean-all" depends="clean" description="Removes the target directory.">
+		<delete quiet="false" failonerror="false" dir="${ivy.cache.dir}"/>
+	</target>
+
+	<target name="clean" description="Removes the target directory.">
+		<delete quiet="false" failonerror="false" dir="${integration.cache.dir}"/>
+		<all-bundles target="clean"/>
+	</target>
+	
+	<target name="build" description="Build the project without testing">
+		<all-bundles target="build"/>
+	</target>
+
+    <target name="test" description="Build and test the project">
+		<all-bundles target="test"/>
+    </target>
+
+	<target name="package" depends="clean, test" description="Performs a full clean, build and test of the project before packaging it for distribution">
+	</target>
+
+
+<!-- Macros -->
+	<macrodef name="all-bundles">
+		<attribute name="target"/>
+		<attribute name="buildpathRef" default="bundles"/>
+		<element name="inherited-properties" optional="true" implicit="true"/>
+		<sequential>
+			<subant target="@{target}" verbose="true" buildpathRef="@{buildpathRef}">
+				<inherited-properties/>
+				<propertyset>
+					<propertyref builtin="commandline"/>
+				</propertyset>
+				<property name="timestamp" value="${timestamp}"/>
+			</subant>
+		</sequential>
+	</macrodef>
+
+</project>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-demo">
+
+	<import file="${basedir}/../demo-build-system/multi-setup.xml"/>
+
+	<path id="bundles">
+		<pathelement location="../demo.bundle.one"/>
+		<pathelement location="../demo.bundle.two"/>
+	</path>
+
+</project>

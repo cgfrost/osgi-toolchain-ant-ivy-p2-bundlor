@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://ivyrep.jayasoft.org/ivy-doc.xsl"?>
+<ivy-module
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd"
+		version="1.3">
+
+	<info organisation="net.codersbrew.build.sample" module="${ant.project.name}" revision="1.0.0" />
+
+	<configurations>
+		<conf name="compile"				visibility="public"							description="Maven compile dependencies"/>
+		<conf name="optional"				visibility="public"		extends="compile"	description="Maven optional dependencies"/>
+		<conf name="provided" 				visibility="public"							description="Maven provided dependencies"/>
+		<conf name="server-provided" 		visibility="public"							description="Maven provided dependencies that already exist in the platform"/>
+		<conf name="runtime"				visibility="public"		extends="compile"	description="Runtime dependencies"/>
+		<conf name="test"					visibility="private"						description="Test dependencies"/>
+	</configurations>
+
+	<publications>
+		<artifact name="${ant.project.name}"/>
+		<artifact name="${ant.project.name}-sources" type="src" ext="jar"/>
+	</publications>
+
+	<dependencies>
+		<!-- === PROVIDED-COMPILE============================================ -->
+
+		<!-- === RUNTIME-DEFAULT =========================================== -->
+
+		<!-- === PROVIDED-RUNTIME =========================================== -->
+		<dependency org="bundle" name="org.eclipse.osgi" rev="${org.eclipse.osgi}" conf="compile->default"/>
+		<!-- === TEST ====================================================== -->
+		<dependency org="bundle" name="org.junit" rev="${org.junit}" conf="test->default"/>
+		<dependency org="org.eclipse.virgo.test" name="org.eclipse.virgo.test.stubs" rev="${org.eclipse.virgo.test}" conf="test->runtime"/>
+		
+	</dependencies>
+
+</ivy-module>

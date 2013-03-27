@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="net.codersbrew.ant.demo.bundle.two">
+
+	<property name="wab.build" value="true" />
+	<import file="${basedir}/../demo-build-system/common-setup.xml"/>
+	
+</project>

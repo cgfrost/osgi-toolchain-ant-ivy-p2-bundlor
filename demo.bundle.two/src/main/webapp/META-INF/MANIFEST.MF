@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ClassPath: .,WEB-INF/classes,WEB-INF/layouts
+Bundle-Version: 1.0.0
+Tool: Bundlor 1.1.2.RELEASE
+Bundle-Name: Demo Web Bundle
+Bundle-ManifestVersion: 2
+Bundle-Activator: net.codersbrew.ant.demo.bundle.two.Activator
+Import-Package: javax.servlet;version="[2.1.0, 3.0.0)",javax.servlet.h
+ ttp;version="[2.1.0, 3.0.0)",net.codersbrew.ant.demo.bundle.one;versi
+ on="[1.0.0,2.0.0)",org.osgi.framework;version="0",org.osgi.service.ht
+ tp;version="0",org.osgi.service.url;version="0",org.osgi.util.tracker
+ ;version="0",org.slf4j;version="1.6.1"
+Bundle-SymbolicName: net.codersbrew.ant.demo.bundle.two
+Web-ContextPath: /demo
+

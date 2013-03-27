@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Export-Package: net.codersbrew.ant.demo.bundle.one;version="1.0.0";use
+ s:="org.osgi.framework",net.codersbrew.ant.demo.bundle.one.internal;v
+ ersion="1.0.0";uses:="net.codersbrew.ant.demo.bundle.one,org.osgi.fra
+ mework"
+Bundle-Version: 1.0.0
+Tool: Bundlor 1.1.2.RELEASE
+Bundle-Name: Demo Content Bundle
+Bundle-ManifestVersion: 2
+Bundle-Activator: net.codersbrew.ant.demo.bundle.one.Activator
+Bundle-Description: Demo Content Provider
+Import-Package: org.osgi.framework;version="0"
+Bundle-SymbolicName: net.codersbrew.ant.demo.bundle.one
+

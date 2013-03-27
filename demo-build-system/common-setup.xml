@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="common-setup" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:bundlor="antlib:org.eclipse.virgo.bundlor.ant">
+
+<!-- Properties -->
+
+	<dirname property="home.build.dir" file="${ant.file.common-setup}/.."/>
+	<property file="${home.build.dir}/build.properties"/>
+
+	<tstamp>
+		<format property="timestamp" pattern="yyyyMMddHHmmss" timezone="GMT"/>
+	</tstamp>
+
+<!-- Bundle Targets -->
+
+	<target name="clean">
+		<delete quiet="false" failonerror="false" dir="${target.dir}"/>
+	</target>
+
+	<target name="build">
+ 		<antcall target="build.jar"/>
+ 		<antcall target="build.wab"/>		
+	</target>
+
+	<target name="build.jar" depends="resolve.compile" if="jar.build">
+		<delete quiet="true" file="${artifacts.dir}"/>
+		<mkdir dir="${artifacts.dir}"/>
+		<delete quiet="true" dir="${main.output.dir}"/>
+		<mkdir dir="${main.output.dir}"/>
+
+  		<javac includeantruntime="false" srcdir="${main.java.dir}" destdir="${main.output.dir}" classpathref="compile.classpath" debug="on" source="${java.level}" target="${java.level}" />
+		<copy todir="@{main.output.dir}">
+			<fileset dir="@{main.resources.dir}" erroronmissingdir="false"/>
+		</copy>
+
+ 		<antcall target="bundlor">
+ 			<param name="output.dir" value="${main.output.dir}"/>
+ 		</antcall>
+
+		<jar destfile="${jar.output.file}" basedir="${main.output.dir}" index="true" filesetmanifest="merge">
+			<manifest>
+				<attribute name="Bundle-ManifestVersion" value="2"/>
+				<attribute name="Bundle-Version" value="${bundle.version}"/>
+				<attribute name="Bundle-Creator" value="${user.name}"/>
+			</manifest>
+		</jar>
+		<jar destfile="${source-jar.output.file}" basedir="${main.java.dir}" index="true"/>
+		<ivy:publish resolver="local-repository" pubdate="${timestamp}" status="${release.type}">
+			<artifacts pattern="${artifacts.dir}/[artifact].[ext]"/>
+		</ivy:publish>
+	</target>
+
+	<target name="build.wab" depends="resolve.compile" if="wab.build">
+		<delete quiet="true" file="${artifacts.dir}"/>
+		<mkdir dir="${artifacts.dir}"/>
+		<delete quiet="true" dir="${wab.staging.dir}"/>
+		<mkdir dir="${wab.classes.dir}"/>
+
+		<copy todir="${wab.staging.dir}">
+			<fileset dir="${main.webapp.dir}" erroronmissingdir="false"/>
+		</copy>
+  		<javac includeantruntime="false" srcdir="${main.java.dir}" destdir="${wab.classes.dir}" classpathref="compile.classpath" debug="on" source="${java.level}" target="${java.level}" />
+		<copy todir="@{wab.staging.dir}">
+			<fileset dir="@{main.resources.dir}" erroronmissingdir="false"/>
+		</copy>
+
+ 		<antcall target="bundlor">
+ 			<param name="output.dir" value="${wab.staging.dir}"/>
+ 		</antcall>
+
+		<jar destfile="${jar.output.file}" basedir="${wab.staging.dir}" index="true" filesetmanifest="merge">
+			<manifest>
+				<attribute name="Bundle-ManifestVersion" value="2"/>
+				<attribute name="Bundle-Version" value="${bundle.version}"/>
+				<attribute name="Bundle-Creator" value="${user.name}"/>
+			</manifest>
+		</jar>
+		<jar destfile="${source-jar.output.file}" index="true" filesetmanifest="merge">
+			<fileset dir="${main.webapp.dir}"/>
+			<fileset dir="${main.java.dir}"/>
+		</jar>
+		<ivy:publish resolver="local-repository" pubdate="${timestamp}" status="${release.type}">
+			<artifacts pattern="${artifacts.dir}/[artifact].[ext]"/>
+		</ivy:publish>	</target>
+
+	<target name="test" depends="build, resolve.test">
+	</target>
+	
+	<target name="package">
+	</target>
+
+	<target name="resolve.compile" depends="ivy.init">
+		<ivy:cachepath resolveId="compile.classpath" pathid="compile.classpath" conf="compile,optional,provided,server-provided" type="jar" log="download-only"/>
+	</target>
+
+	<target name="resolve.test" depends="ivy.init, resolve.compile">
+		<ivy:cachepath resolveId="test.classpath" pathid="test.classpath" conf="test" type="jar" log="download-only"/>
+		<ivy:cachepath resolveId="runtime.classpath" pathid="runtime.classpath" conf="runtime" type="jar" log="download-only"/>
+	</target>
+
+<!-- Bundlor -->
+
+	<target name="bundlor" depends="bundlor.init">
+		<bundlor:bundlor inputPath="${output.dir}" outputPath="${output.dir}" bundleVersion="${bundle.version}" manifestTemplatePath="${manifest.template.file}" failOnWarnings="${fail.on.warnings}"/>
+	</target>
+
+	<target name="bundlor.init" depends="ivy.init" >
+		<ivy:cachepath resolveId="bundlor.classpath" pathid="bundlor.classpath" organisation="org.eclipse.virgo.bundlor" module="org.eclipse.virgo.bundlor.ant" revision="${bundlor.ant.version}" conf="ant" inline="true" type="jar" log="download-only"/>
+		<taskdef resource="org/eclipse/virgo/bundlor/ant/antlib.xml" uri="antlib:org.eclipse.virgo.bundlor.ant" classpathref="bundlor.classpath"/>
+	</target>
+
+<!-- Other targets -->
+
+	<target name="ivy.init" unless="ivy.initialized">
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant">
+			<classpath>
+				<path location="${build.system.dir}/ivy.jar"/>
+				<path location="${build.system.dir}/org.springframework.build.aws.ivy.jar"/>
+			</classpath>
+		</taskdef>
+		<ivy:settings file="${build.system.dir}/ivysettings.xml"/>
+		<property name="ivy.initialized" value="true"/>
+	</target>
+
+</project>

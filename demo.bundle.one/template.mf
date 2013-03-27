@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-Name: Demo Content Bundle
+Bundle-Description: Demo Content Provider
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: net.codersbrew.ant.demo.bundle.one
+Bundle-Version: 1.0.0
+Bundle-Activator: net.codersbrew.ant.demo.bundle.one.Activator
+Import-Template: 
+ javax.management.*;version="0",
+ org.osgi.framework.*;version="0"
+Excluded-Imports: 
+ org.junit
